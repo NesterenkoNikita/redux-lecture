@@ -4,16 +4,18 @@ const h = heact('.list');
 import NewCardForm from './NewCardForm';
 import Card from './Card';
 import './List.styl';
+import * as actions from '../actions';
+import {connect} from 'react-redux';
 
-export default class List extends React.Component {
+class List extends React.Component {
     static propTypes = {
+        cardAdd: React.PropTypes.func.isRequired,
         list: React.PropTypes.object.isRequired,
-        onCardAdd: React.PropTypes.func.isRequired,
         onRemove: React.PropTypes.func.isRequired
     };
 
     onCardAdd = name => {
-        this.props.onCardAdd(name);
+        this.props.cardAdd(this.props.list._id, name);
     };
 
     onRemove = () => {
@@ -44,3 +46,10 @@ export default class List extends React.Component {
         );
     }
 }
+
+export default connect(
+    (state, ownProps) => ({
+        list: fromList.getListsWithCards(state)
+    }),
+    actions
+)(List);

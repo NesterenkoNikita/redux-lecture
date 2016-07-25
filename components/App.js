@@ -5,42 +5,22 @@ import cuid from 'cuid';
 
 import NewListForm from './NewListForm';
 import Board from './Board';
+import {getListsWithCards} from '../reducers';
+import * as actions from '../actions';
 
 export default class App extends React.Component {
-    state = {
-        lists: []
+    static propTypes = {
+        listAdd: React.PropTypes.func.isRequired,
+        listRemove: React.PropTypes.func.isRequired,
+        lists: React.PropTypes.array.isRequired
     };
 
     onListAdd = name => {
-        this.setState({
-            lists: [...this.state.lists, {
-                _id: cuid(),
-                name,
-                cards: []
-            }]
-        });
-    };
-
-    onCardAdd = (listId, name) => {
-        this.setState({
-            lists: this.state.lists.map(list => {
-                if (list._id === listId) {
-                    return {
-                        ...list,
-                        cards: [...list.cards, name]
-                    };
-                }
-                return list;
-            })
-        });
+        this.props.listAdd(name);
     };
 
     onListRemove = listId => {
-        this.setState({
-            lists: this.state.lists.filter(list => {
-                return list._id !== listId;
-            })
-        });
+        this.props.listRemove(listId)
     };
 
     render() {
@@ -49,8 +29,7 @@ export default class App extends React.Component {
                 onListAdd: this.onListAdd
             }),
             h(Board, {
-                lists: this.state.lists,
-                onCardAdd: this.onCardAdd,
+                lists: this.props.lists,
                 onListRemove: this.onListRemove
             })
         );

@@ -6,7 +6,6 @@ import './Board.styl';
 export default class Board extends React.Component {
     static propTypes = {
         lists: React.PropTypes.array.isRequired,
-        onCardAdd: React.PropTypes.func.isRequired,
         onListRemove: React.PropTypes.func.isRequired,
     };
     render() {
@@ -14,8 +13,7 @@ export default class Board extends React.Component {
             this.props.lists.map(list => {
                 return h(List, {
                     key: list._id,
-                    list,
-                    onCardAdd: name => this.props.onCardAdd(list._id, name),
+                    listId: list._id,
                     onRemove: () => this.props.onListRemove(list._id)
                 });
             })
